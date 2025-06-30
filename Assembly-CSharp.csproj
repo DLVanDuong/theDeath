@@ -64,17 +64,17 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Enemy\DeadState.cs" />
     <Compile Include="Assets\Scripts\ScriptableObject\PlayerObject\Character.cs" />
+    <Compile Include="Assets\Scripts\InputSystem\PlayerControls..cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyStateMachine.cs" />
     <Compile Include="Assets\Scripts\Enemy\IState.cs" />
-    <Compile Include="Assets\PlayerControls..cs" />
     <Compile Include="Assets\Scripts\Enemy\ChaseState.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\Enemy\Enemy.cs" />
     <Compile Include="Assets\Scripts\Enemy\AttackState.cs" />
     <Compile Include="Assets\Scripts\ScriptableObject\EnemyObject\EnemyData.cs" />
-    <Compile Include="Assets\playerControler.cs" />
-    <Compile Include="Assets\Kevin Iglesias\Human Animations\Scripts\SpineProxy.cs" />
     <Compile Include="Assets\Scripts\Enemy\PatrolState.cs" />
+    <Compile Include="Assets\Scripts\Player\playerControler.cs" />
+    <Compile Include="Assets\Art\Player\Human Animations\Scripts\SpineProxy.cs" />
     <Compile Include="Assets\Scripts\Enemy\IdleState.cs" />
   </ItemGroup>
   <ItemGroup>

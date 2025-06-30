@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
-    <Compile Include="Assets\Blink\Art\Characters\LowPoly\Editor\MaterialTilingOffset.cs" />
+    <Compile Include="Assets\Art\Animation\Art\Characters\LowPoly\Editor\MaterialTilingOffset.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
