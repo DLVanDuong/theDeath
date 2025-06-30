@@ -28,13 +28,13 @@ public class IdleState : IState
         timer = 0f; // Reset timer khi vào trạng thái Idle
     }
     public void Execute()
-    { 
+    {
         // nếu thấy Player, chuyển sang trạng thái Chase
-        if(Vector3.Distance(enemy.transform.position, enemy.player.position) < enemy.sightRange)
+        if (enemy.CanDetectPlayer())
         {
             enemy.ChangeState(new ChaseState(enemy));
             return;
-        } 
+        }
 
         timer += Time.deltaTime; // Tăng timer theo thời gian thực
       

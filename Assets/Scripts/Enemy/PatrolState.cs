@@ -30,7 +30,7 @@ public class PatrolState : IState
     public void Execute()
     { 
         // Nếu thấy Player, chuyển sang trạng thái Chase
-        if (Vector3.Distance(enemy.transform.position, enemy.player.position) < enemy.sightRange) 
+        if (enemy.CanDetectPlayer()) 
         {
             enemy.ChangeState(new ChaseState(enemy));
             return;// Tránh thực hiện các lệnh bên dưới nếu đã chuyển trạng thái

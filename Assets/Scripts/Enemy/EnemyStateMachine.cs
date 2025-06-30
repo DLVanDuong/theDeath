@@ -18,6 +18,7 @@ public class EnemyStateMachine : MonoBehaviour
     [HideInInspector] public NavMeshAgent agent;
     [HideInInspector] public Animator animator;
     [HideInInspector] public Transform player;
+    private PlayerControler playerControler;
 
     // == thông số AI ==
     [Header("AI Parameters")]
@@ -25,6 +26,11 @@ public class EnemyStateMachine : MonoBehaviour
     [HideInInspector] public int currentPoint = 0;
     public float sightRange = 10f;
     public float attackRange = 2f;
+    [Range(0, 360)]
+    public float viewAngle = 90;// góc nhìn
+    public float hearingRange = 5; // nge chạy
+
+    
 
     [Header("Enemy Data")]
     public EnemyData enemyData;
@@ -38,8 +44,43 @@ public class EnemyStateMachine : MonoBehaviour
         animator = GetComponent<Animator>();
         agent.speed = enemyData.Speed; // Thiết lập tốc độ của NavMeshAgent từ dữ liệu EnemyData
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        // Khởi tạo dữ liệu Enemy
         
+        if(player!= null)
+        {
+            playerControler = player.GetComponent<PlayerControler>();
+        }
+
+    }
+    public bool CanDetectPlayer()
+    {
+        //Kiểm tra xem có tham chiếu đến player không
+        if (playerControler == null) return false;
+        //kiểm tra tiếng động 
+        bool isPlayerRunning = playerControler.isSprinting;
+
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if(isPlayerRunning && distanceToPlayer <= hearingRange)
+        {
+            return true;
+        }
+        if(distanceToPlayer <= sightRange)
+        {
+            Vector3 derectionToPlayer =(player.position - transform.position).normalized;
+
+            // kiểm tra góc nhìn
+            if(Vector3.Angle(transform.forward, derectionToPlayer) < viewAngle / 2) 
+            {
+                float distanceToTarget = Vector3.Distance(transform.position,player.position);
+                if (Physics.Raycast(transform.position, derectionToPlayer, distanceToTarget, LayerMask.GetMask("Default")))
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+        // không thấy người chơi
+        return false;
     }
     private void Start()
     {
@@ -102,9 +143,23 @@ public class EnemyStateMachine : MonoBehaviour
     }
     private void OnDrawGizmosSelected()
     {
+        // Tầm Nhìn
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, sightRange);
+
+        //Tầm tấn công
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
+
+        //Góc nhìn
+        Vector3 fovLine1 = Quaternion.AngleAxis(viewAngle / 2, transform.up) * transform.forward * sightRange;
+        Vector3 fovLine2 = Quaternion.AngleAxis(viewAngle / 2, transform.up) * transform.forward * sightRange;
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawRay(transform.position, fovLine1);
+        Gizmos.DrawRay (transform.position, fovLine2);
+
+        //vẻ tầm nge
+        Gizmos.color = new Color(1, 0, 1, 0.25f);
+        Gizmos.DrawWireSphere (transform.position, hearingRange);
     }
 }

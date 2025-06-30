@@ -17,7 +17,7 @@ public class PlayerControler : MonoBehaviour
 
     // Biến lưu trữ giá trị Input
     private Vector2 currentMoveInput;
-    private bool isSprinting = false;
+    public bool isSprinting = false;
 
     [SerializeField] private Transform cameraTransform;
 
