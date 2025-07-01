@@ -11,20 +11,23 @@ public class IdleState : IState
         this.enemy = enemy;
     }
     public void Enter()
-    {
-        Debug.Log("Enemy Enter Idle State");
-        
+    {               
         enemy.agent.isStopped = true; // Dừng NavMeshAgent khi vào trạng thái Idle
-        enemy.animator.ResetTrigger("Attack"); // Reset trigger Attack nếu có
-        enemy.animator.SetFloat("Speed", 0f); // Đặt tốc độ về 0 trong Animator
-
-        waitTime = Random.Range(2f, 5f); // Tùy chỉnh thời gian chờ ngẫu nhiên giữa 2-5 giây
-        int idleIndex = Random.Range(0, 2);
-        enemy.animator.SetInteger("IdleIndex", idleIndex); // Chọn ngẫu nhiên Idle Animation
-
-        //kích hoạt Animator Idle
-        enemy.animator.SetTrigger("PlayIdleAction");
-
+        if (enemy.enemyData.animationData != null)
+        {
+            enemy.animator.ResetTrigger(enemy.enemyData.animationData.attackTrigger); // Reset trigger Attack nếu có
+            enemy.animator.SetFloat(enemy.enemyData.animationData.speedParam, 0f); // Đặt tốc độ về 0 trong Animator
+            int idleIndex = Random.Range(0, 2);
+            enemy.animator.SetInteger(enemy.enemyData.animationData.idleIndexParam, idleIndex); // Chọn ngẫu nhiên Idle Animation
+            enemy.animator.SetTrigger(enemy.enemyData.animationData.playIdleActionTrigger); // Kích hoạt Animator Idle
+        }
+        else
+        {
+            enemy.animator.ResetTrigger("Attack"); // Reset trigger Attack nếu có
+            enemy.animator.SetFloat("Speed", 0f); // Đặt tốc độ về 0 trong Animator
+            enemy.animator.SetInteger("IdleIndex", Random.Range(0, 2)); // Chọn ngẫu nhiên Idle Animation
+            enemy.animator.SetTrigger("PlayIdleAction"); // Kích hoạt Animator Idle
+        }    
         timer = 0f; // Reset timer khi vào trạng thái Idle
     }
     public void Execute()
@@ -46,10 +49,14 @@ public class IdleState : IState
     }
     public void Exit()
     {
-        Debug.Log("Enemy Exit Idle State");
-        enemy.agent.isStopped = false; // Dừng agent khi rời khỏi trạng thái Idle
-        // Không cần làm gì đặc biệt khi rời khỏi trạng thái Idle
-        enemy.animator.ResetTrigger("PlayIdleAction");
-       
+        if(enemy.enemyData.animationData != null)
+        {
+            enemy.animator.ResetTrigger(enemy.enemyData.animationData.playIdleActionTrigger); // Reset trigger Idle nếu có
+        }
+        else
+        {
+            enemy.animator.ResetTrigger("PlayIdleAction"); // Reset trigger Idle nếu có
+        }
+
     }
 }

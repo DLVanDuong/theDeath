@@ -10,10 +10,14 @@ public class DeadState : IState
     }
     public void Enter()
     {
-        Debug.Log("Enemy is dead");
-        enemy.animator.SetTrigger("Die");
-        enemy.agent.isStopped = true; // Stop the NavMeshAgent
-
+        if(enemy.enemyData.animationData != null)
+        {
+            enemy.animator.SetTrigger(enemy.enemyData.animationData.dieTrigger); // Kích hoạt Animator Dead
+        }
+        else
+        {
+            enemy.animator.SetTrigger("Dead"); // Kích hoạt Animator Dead nếu không có EnemyAnimationData
+        }
         // Disable all colliders to prevent interaction with other objects
         var colliders = enemy.GetComponents<Collider>();
         if (colliders != null)

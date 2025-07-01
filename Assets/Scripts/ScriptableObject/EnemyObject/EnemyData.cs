@@ -10,4 +10,6 @@ public class EnemyData : ScriptableObject
     public float AttackRange = 1f; // Khoảng cách tấn công của kẻ địch
     public float AttackCooldown = 1f; // Thời gian hồi chiêu giữa các đòn tấn công
 
+    [Header("Animation Data")]
+    public EnemyAnimationData animationData;
 }

@@ -31,7 +31,15 @@ public class AttackState : IState
     private void StartAttack()
     {
         isAttacking = true;
-        enemy.animator.SetTrigger("Attack");
+        if(enemy.enemyData.animationData != null)
+        {
+            //enemy.animator.SetInteger(enemy.enemyData.animationData.attackTrigger, Random.Range(0, 2)); // Chọn ngẫu nhiên Attack Animation
+            enemy.animator.SetTrigger(enemy.enemyData.animationData.attackTrigger); // Kích hoạt Animator Attack    
+        }
+        else
+        {
+            enemy.animator.SetTrigger("Attack"); // Kích hoạt Animator Attack nếu không có EnemyAnimationData
+        }
     }
 
     public void Execute()

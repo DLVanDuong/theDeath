@@ -30,7 +30,12 @@ public class EnemyStateMachine : MonoBehaviour
     public float viewAngle = 90;// góc nhìn
     public float hearingRange = 5; // nge chạy
 
-    
+    // == Trọng lực cho Enemy ==
+    [Header("Gravity Settings")]
+    [SerializeField] private float gravity = -9.81f; // Trọng lực
+    [SerializeField] private float groundCheckDistance = 0.1f; // Khoảng cách kiểm tra mặt đất
+    [SerializeField] private LayerMask groundLayer; // Lớp mặt đất để kiểm tra
+    private Vector3 verticalVelocity; // Vận tốc thẳng đứng
 
     [Header("Enemy Data")]
     public EnemyData enemyData;
@@ -48,8 +53,7 @@ public class EnemyStateMachine : MonoBehaviour
         if(player!= null)
         {
             playerControler = player.GetComponent<PlayerControler>();
-        }
-
+        }      
     }
     public bool CanDetectPlayer()
     {
@@ -92,21 +96,28 @@ public class EnemyStateMachine : MonoBehaviour
     }
     void Update()
     {
-        if(isDead) return;// Nếu đã chết, không làm gì cả
-        UpDateMovementAnimator();
-        // Luôn chạy hàm Execute của trạng thái hiện tại
-        currentState?.Execute();
+        if (isDead) return;// Nếu đã chết, không làm gì cả
+        HandleGravity(); // Xử lý trọng lực cho Enemy
+        if (agent.enabled)
+        {
+            UpDateMovementAnimator();
+            // Luôn chạy hàm Execute của trạng thái hiện tại
+            currentState?.Execute();
+        }
     }
     private void UpDateMovementAnimator()
     {
         // lấy tốc độ của NavMeshAgent
         float currentSpeed = agent.velocity.magnitude;
-
-        // === THÊM DÒNG DEBUG NÀY VÀO ===
-        Debug.Log("Current Agent Velocity Magnitude: " + currentSpeed);
-
-        // cập nhật Animator với tốc độ hiện tại
-        animator.SetFloat("Speed", currentSpeed);
+        if (enemyData.animationData != null)
+        {
+            animator.SetFloat(enemyData.animationData.speedParam, currentSpeed);
+        }
+        else       
+        {
+            // cập nhật Animator với tốc độ hiện tại
+            animator.SetFloat("Speed", currentSpeed);
+        }
     }
     public void ChangeState(IState newState)
     {
@@ -139,6 +150,37 @@ public class EnemyStateMachine : MonoBehaviour
         else
         {
             ChangeState(new ChaseState(this)); // Chuyển sang trạng thái Chase nếu ra ngoài tầm
+        }
+    }
+    private void HandleGravity()
+    {
+        bool isGrounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer);
+        if (isGrounded && verticalVelocity.y < 0)
+        {
+            // Nếu trên mặt đất, reset vận tốc rơi
+            verticalVelocity.y = -2f; // Một gia tốc nhỏ để giữ kẻ địch trên mặt đất
+
+            // Đảm bảo NaMeshAgent được bật để nó di chuyển trên mặt đất
+            if(!agent.enabled)
+            {
+                agent.enabled = true;
+            }
+        }
+        else
+        {
+            // Nếu không trên mặt đất, áp dụng trọng lực
+            // Tắt NavMeshAgent để tránh va chạm không mong muốn
+            if(agent.enabled)
+            {
+                agent.enabled = false; // Tắt NavMeshAgent khi không trên mặt đất
+            }
+            verticalVelocity.y += gravity * Time.deltaTime; // Cập nhật vận tốc rơi
+        }
+        // Di chuyển Enemy theo trục Y dựa trên vận tốc thẳng đứng
+        // Chúng ta chỉ làm  điều này khi agent không được bật
+        if(!agent.enabled)
+        {
+            transform.position += verticalVelocity * Time.deltaTime;
         }
     }
     private void OnDrawGizmosSelected()
