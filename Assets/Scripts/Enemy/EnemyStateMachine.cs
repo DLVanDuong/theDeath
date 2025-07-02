@@ -18,7 +18,7 @@ public class EnemyStateMachine : MonoBehaviour
     [HideInInspector] public NavMeshAgent agent;
     [HideInInspector] public Animator animator;
     [HideInInspector] public Transform player;
-    private PlayerControler playerControler;
+    private PlayerStateMachine playerControler;
 
     // == thông số AI ==
     [Header("AI Parameters")]
@@ -52,7 +52,7 @@ public class EnemyStateMachine : MonoBehaviour
         
         if(player!= null)
         {
-            playerControler = player.GetComponent<PlayerControler>();
+            playerControler = player.GetComponent<PlayerStateMachine>();
         }      
     }
     public bool CanDetectPlayer()
@@ -60,7 +60,7 @@ public class EnemyStateMachine : MonoBehaviour
         //Kiểm tra xem có tham chiếu đến player không
         if (playerControler == null) return false;
         //kiểm tra tiếng động 
-        bool isPlayerRunning = playerControler.isSprinting;
+        bool isPlayerRunning = playerControler._isSprinting;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
