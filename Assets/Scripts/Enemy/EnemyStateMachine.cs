@@ -60,7 +60,7 @@ public class EnemyStateMachine : MonoBehaviour
         //Kiểm tra xem có tham chiếu đến player không
         if (playerControler == null) return false;
         //kiểm tra tiếng động 
-        bool isPlayerRunning = playerControler._isSprinting;
+        bool isPlayerRunning = playerControler.isSprinting;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 

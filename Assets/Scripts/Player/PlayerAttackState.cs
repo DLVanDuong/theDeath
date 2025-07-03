@@ -14,17 +14,7 @@ public class PlayerAttackState : PlayerBaseState
 
     public override void UpdateState()
     {
-        // Ta cần đợi animation tấn công chạy xong rồi mới chuyển state
-        // normalizedTime > 1 nghĩa là animation đã chạy hết 1 vòng
-        // Cần kiểm tra tên của state trong Animator để chắc chắn ta đang đợi đúng animation
-        // "Attack" là tên của state tấn công trong Animator Layer của bạn
-        if (Ctx.Animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") &&
-            Ctx.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1.0f)
-        {
-            CheckSwitchStates();
-        }
-        // Nếu bạn dùng Upper Body layer, index của layer có thể là 1
-        // if (Ctx.Animator.GetCurrentAnimatorStateInfo(1).normalizedTime > 1.0f) ...
+        
     }
 
     public override void ExitState()

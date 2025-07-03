@@ -409,7 +409,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.07090617, y: -0.07179548, z: 0.0051169265, w: 0.9948827}
+  m_LocalRotation: {x: 0.0709477, y: -0.063206024, z: 0.00450475, w: 0.99546534}
   m_LocalPosition: {x: 14.907765, y: 18.286713, z: -12.678503}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -761,7 +761,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1286878651}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.07090616, y: -0.07179546, z: 0.0051169256, w: 0.9948827}
+  m_LocalRotation: {x: 0.07094769, y: -0.06320602, z: 0.0045047486, w: 0.99546534}
   m_LocalPosition: {x: 14.907765, y: 18.286713, z: -12.678503}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1278,6 +1278,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 464111391386928406, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
+      propertyPath: m_Center.y
+      value: 1.09
+      objectReference: {fileID: 0}
     - target: {fileID: 1438546959266459337, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.1326475
@@ -1323,12 +1327,20 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 2329926209397966179, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
+      propertyPath: _isSprinting
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329926209397966179, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
       propertyPath: cameraTransform
       value: 
       objectReference: {fileID: 330585546}
+    - target: {fileID: 2329926209397966179, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
+      propertyPath: _isAttackPressed
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4540229000190281644, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
       propertyPath: m_AnimatePhysics
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1343,8 +1355,8 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 1596795662}
+  - {fileID: 1039192815}
   - {fileID: 2062670248}
   - {fileID: 236081632}
-  - {fileID: 1039192815}
   - {fileID: 193169029}
   - {fileID: 1512979963}
