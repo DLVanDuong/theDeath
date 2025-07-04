@@ -1327,9 +1327,13 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 330585546}
     - target: {fileID: 2329926209397966179, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
+      propertyPath: 'testWeapon.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 55e5c4fcf42607942aaefec746780b2b, type: 2}
+    - target: {fileID: 2329926209397966179, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
       propertyPath: 'testWeapon.Array.data[1]'
       value: 
-      objectReference: {fileID: 11400000, guid: 04f8b4ec7d83d36458ac9ec5144d46d1, type: 2}
+      objectReference: {fileID: 0}
     - target: {fileID: 7488485820153291786, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.08993387
