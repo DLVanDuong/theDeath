@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public enum EquipmentSlot { Weapon,Shield,Armor}
+public enum EquipmentSlot { RightHand, lefHand, Shield, Armor}
 
 [CreateAssetMenu(fileName = "New Equipment", menuName = "Equipment")]
 public class EquipmentData : ScriptableObject

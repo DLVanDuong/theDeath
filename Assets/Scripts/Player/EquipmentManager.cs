@@ -11,7 +11,8 @@ public class EquipmentManager : MonoBehaviour
 
     [SerializeField] private Animator animator;
     [Tooltip("Điểm neo [transform] trên xương của nhân vật")]
-    [SerializeField] private Transform weaponHoldPoint;
+    [SerializeField] private Transform weaponHoldPointR;
+    [SerializeField] private Transform weaponHoldPointL;
     [SerializeField] private Transform shieldholdPoint;
     // có thểm thêm điểm neo ở đây
 
@@ -28,6 +29,7 @@ public class EquipmentManager : MonoBehaviour
     }
     public void Equip(EquipmentData newItem)
     {
+        
         // 1. Kiểm tra xem ở vị trí (slot) của vật phẩm mới có đang trang bị vật phẩm nào khác không.
         if (equippedItems.ContainsKey(newItem.slot))
         {
@@ -60,33 +62,36 @@ public class EquipmentManager : MonoBehaviour
     }
     public void Unequip(EquipmentSlot slot)
     {
+
         // Kiểm tra xem có vật phẩm nào ở vị trí này để gỡ không
         if (equippedItems.ContainsKey(slot))
         {
+            EquipmentData oldItem = equippedItems[slot];
             // Xóa vật phẩm khỏi Dictionary dữ liệu
             equippedItems.Remove(slot);
 
             // Phá hủy GameObject của vật phẩm đã tạo ra
-            if (spawnedObjects.ContainsKey(slot))
+            if (animator.runtimeAnimatorController == oldItem.overrideController)
             {
-                Destroy(spawnedObjects[slot]);
-                spawnedObjects.Remove(slot);
+                animator.runtimeAnimatorController = controller;
             }
             // Quay trở lại Animator Controller gốc
             animator.runtimeAnimatorController = controller;
 
             // Báo cho Animator biết là đã gỡ trang bị
-            animator.SetBool("isEquipped", false);
+            animator.SetBool("isEquipped", equippedItems.Count > 0);
         }
     }
     private Transform GetParentTransformForSlot(EquipmentSlot slot)
     {
         switch (slot)
         {
-            case EquipmentSlot.Weapon:
-                return weaponHoldPoint;       
+            case EquipmentSlot.RightHand:
+                return weaponHoldPointR;
+            case EquipmentSlot.lefHand:
+                return weaponHoldPointL;
             case EquipmentSlot.Shield:
-                return shieldholdPoint;
+                return shieldholdPoint;           
             default:
                 return null;
         }

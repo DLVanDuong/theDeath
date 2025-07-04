@@ -1038,7 +1038,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
+  m_AnimatePhysics: 1
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -1068,7 +1068,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 1.09, z: 0}
 --- !u!114 &894497578722951326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1112,8 +1112,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 4540229000190281644}
-  weaponHoldPoint: {fileID: 294709757028248012}
-  shieldholdPoint: {fileID: 642274547407859695}
+  weaponHoldPointR: {fileID: 294709757028248012}
+  weaponHoldPointL: {fileID: 7488485820153291786}
+  shieldholdPoint: {fileID: 0}
 --- !u!114 &2329926209397966179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1126,11 +1127,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58a90503669b6374a9bfc72b163b91a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isSprinting: 0
+  isAttackPressed: 0
   cameraTransform: {fileID: 0}
   rotationSpeed: 10
+  gravity: -9.81
   testWeapon:
   - {fileID: 11400000, guid: 55e5c4fcf42607942aaefec746780b2b, type: 2}
-  - {fileID: 11400000, guid: 7ad7a48fbcb327d4397e266734f84a78, type: 2}
+  - {fileID: 11400000, guid: 55e5c4fcf42607942aaefec746780b2b, type: 2}
 --- !u!1 &1789272960074739661
 GameObject:
   m_ObjectHideFlags: 0
@@ -1670,7 +1674,7 @@ GameObject:
   m_Component:
   - component: {fileID: 294709757028248012}
   m_Layer: 7
-  m_Name: Piviot
+  m_Name: SwordRightHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1701,7 +1705,7 @@ GameObject:
   m_Component:
   - component: {fileID: 642274547407859695}
   m_Layer: 7
-  m_Name: Piviot
+  m_Name: ShieldLefHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2725,6 +2729,37 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.26453483, y: -0.0643382, z: -0.00007355213}
     m_Extent: {x: 0.33124912, y: 0.27240586, z: 0.80939645}
   m_DirtyAABB: 0
+--- !u!1 &3921149308059743946
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7488485820153291786}
+  m_Layer: 7
+  m_Name: SwordLefHand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7488485820153291786
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3921149308059743946}
+  serializedVersion: 2
+  m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
+  m_LocalPosition: {x: 0.091, y: 0.017, z: -0.032}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5408663870200538173}
+  m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
 --- !u!1 &3958228104600771630
 GameObject:
   m_ObjectHideFlags: 0
@@ -5981,6 +6016,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 642274547407859695}
+  - {fileID: 7488485820153291786}
   - {fileID: 3650815501293700776}
   - {fileID: 4020360767693765181}
   - {fileID: 5224854311576672048}
