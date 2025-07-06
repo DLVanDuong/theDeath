@@ -1,4 +1,4 @@
-﻿// PlayerStateMachine.cs
+﻿using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,7 +12,7 @@ public class PlayerStateMachine : MonoBehaviour
     private PlayerStateFactory states;
 
     // === Tham chiếu ===
-    private CharacterController characterController;
+    public CharacterController characterController;
     private Animator animator;
     private EquipmentManager equipmentManager;
 
@@ -21,6 +21,8 @@ public class PlayerStateMachine : MonoBehaviour
     private Vector2 currentMoveInput;
     public bool isSprinting = false;
     public bool isAttackPressed = false;
+    public bool isJumpPressed = false;
+    public bool isDodgePressed = false;
 
     // === Camera & Rotation ===
     [Header("Camera & Rotation")]
@@ -30,7 +32,8 @@ public class PlayerStateMachine : MonoBehaviour
     // ==Gravity===
     [Header("Gravity")]
     [SerializeField] private float gravity = -9.81f;
-    private float playerlVelocityY;
+    [SerializeField] public float jumpForce = 5f; // Lực nhảy
+    public float playerVelocityY;
 
     // === Animator Hashes ===
     private readonly int _horizontalHash = Animator.StringToHash("Horizontal");
@@ -41,6 +44,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     // === Getters & Setters cho các State ===
     public PlayerBaseState CurrentState { get => currentState; set => currentState = value; }
+    public CharacterController CharacterController { get => characterController; }
     public Animator Animator { get => animator; }
     public Vector2 CurrentMoveInput { get => currentMoveInput; }
     public bool IsAttackPressed { get => isAttackPressed; set => isAttackPressed = value; }
@@ -49,6 +53,10 @@ public class PlayerStateMachine : MonoBehaviour
     public int IsSprintingHash { get => _isSprintingHash; }
     public int IsEquippedHash { get => _isEquippedHash; }
     public int AttackHash { get => _attackHash; }
+    public bool IsJumpPressed { get => isJumpPressed; set => isJumpPressed = value; }
+    public bool IsDodgePressed { get => isDodgePressed; set => isDodgePressed = value; }
+    public float PlayerVelocityY { get => playerVelocityY; set => playerVelocityY = value; }
+
 
     // === Testing ===
     [Header("Testing")]
@@ -61,6 +69,10 @@ public class PlayerStateMachine : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         equipmentManager = GetComponent<EquipmentManager>();
+        states = new PlayerStateFactory(this);
+
+        currentState = states.Grounded();
+        currentState.EnterState();
 
         inputActions = new PlayerControls();
         inputActions.Player.Move.performed += ctx => currentMoveInput = ctx.ReadValue<Vector2>();
@@ -68,18 +80,14 @@ public class PlayerStateMachine : MonoBehaviour
         inputActions.Player.Sprint.performed += ctx => isSprinting = true;
         inputActions.Player.Sprint.canceled += ctx => isSprinting = false;
         inputActions.Player.Attack.performed += ctx => isAttackPressed = true;
+        inputActions.Player.Jump.performed += ctx => isJumpPressed = true;
+        inputActions.Player.Dodge.performed += ctx => isDodgePressed = true;
 
         if (cameraTransform == null) { cameraTransform = Camera.main.transform; }
-
-        states = new PlayerStateFactory(this);
-        currentState = states.Idle();
-        currentState.EnterState();
-
-        // SỬA LỖI: Thay đổi logic xử lý mảng testWeapon
-        // 1. Kiểm tra xem mảng có tồn tại và có phần tử nào không
+     
+        // --- Thêm logic để tự động trang bị vũ khí test ---
         if (testWeapon != null && testWeapon.Length > 0)
         {
-            // 2. Dùng vòng lặp để trang bị TỪNG vật phẩm trong mảng
             foreach (EquipmentData item in testWeapon)
             {
                 if (item != null)
@@ -90,7 +98,6 @@ public class PlayerStateMachine : MonoBehaviour
         }
         else
         {
-            // Nếu không có gì để test, đảm bảo trạng thái equipped là false
             animator.SetBool(_isEquippedHash, false);
         }
     }
@@ -103,20 +110,18 @@ public class PlayerStateMachine : MonoBehaviour
         HandleGravity();
         currentState.UpdateState();
     }
+    // Hàm này áp dụng lực lên nhân vật
     void HandleGravity()
     {
-        if(characterController.isGrounded && playerlVelocityY < 0.0f)
+        if (characterController.isGrounded && playerVelocityY < 0.0f)
         {
-            // Nếu có, reset vận tốc rơi để nhân vật không bị tích tụ lực hấp dẫn khi đang đứng yên
-            // Dùng một giá trị âm nhỏ để đảm bảo isGrounded luôn đúng
-            playerlVelocityY = -2.0f;
+            playerVelocityY = -2.0f;
         }
         else
         {
-            playerlVelocityY += gravity * Time.deltaTime; // Thêm trọng lực nếu không chạm đất
+            playerVelocityY += gravity * Time.deltaTime;
         }
-        Vector3 verticalMovement = new Vector3(0, playerlVelocityY, 0);
-        // áp dụng di chuyển chiều dọc vào nhân vật
+        Vector3 verticalMovement = new Vector3(0, playerVelocityY, 0);
         characterController.Move(verticalMovement * Time.deltaTime);
     }
     public void HandleRotation()
@@ -146,8 +151,22 @@ public class PlayerStateMachine : MonoBehaviour
     }
     public void OnAttackAnimationEnd()
     {
-        // Hàm này sẽ được gọi bởi Animation Event khi animation tấn công kết thúc.
-        // Nhiệm vụ của nó là yêu cầu state hiện tại (tức là AttackState) kiểm tra để chuyển sang state tiếp theo.
         currentState.CheckSwitchStates();
+    }
+    public void OnDodgeAnimationEnd()
+    {
+        currentState.CheckSwitchStates();
+    }
+    public void EnableHitbox()
+    {
+        Debug.Log("Enabling hitbox for current weapon.");
+        equipmentManager.EnableCurrentWeaponHitbox();
+    }
+
+    // Hàm này sẽ được gọi bởi Animation Event để TẮT hitbox
+    public void DisableHitbox()
+    {
+        Debug.Log("Disabling hitbox for current weapon.");
+        equipmentManager.DisableCurrentWeaponHitbox();
     }
 }

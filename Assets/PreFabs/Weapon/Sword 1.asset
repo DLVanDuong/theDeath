@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Sword 1
   m_EditorClassIdentifier: 
   slot: 1
-  equipPrefab: {fileID: 5746359903908249793, guid: 78925be475d86164f92d73a589da7cba, type: 3}
+  equipPrefab: {fileID: 5746359903908249793, guid: a1e07f8cbb7bca44a899b3bc302222f1, type: 3}
   overrideController: {fileID: 22100000, guid: 5f0541eb8ea009042a5ee391c45da6e8, type: 2}

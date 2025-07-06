@@ -1,34 +1,26 @@
 ﻿// PlayerMoveState.cs
-public class PlayerMoveState : PlayerBaseState
+public class PlayerMoveState : PlayerGroundedState
 {
-    public PlayerMoveState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
-        : base(currentContext, playerStateFactory) { }
+    public PlayerMoveState(PlayerStateMachine stateMachine, PlayerStateFactory playerStateFactory)
+        : base(stateMachine, playerStateFactory) { }
 
-    public override void EnterState() { }
+    public override void EnterState() { base.EnterState(); }
 
     public override void UpdateState()
     {
+        base.UpdateState(); // Cập nhật trạng thái hiện tại
+
         // Cập nhật hướng xoay và animation của nhân vật
         Ctx.HandleRotation();
         Ctx.HandleAnimation();
 
-        // Kiểm tra để chuyển state
-        CheckSwitchStates();
-    }
-
-    public override void ExitState() { }
-
-    public override void CheckSwitchStates()
-    {
-        // Nếu người chơi nhấn nút tấn công, chuyển sang AttackState
-        if (Ctx.IsAttackPressed)
+        // Chỉ kiểm tra logic riêng: khi nào thì dừng lại
+        if(Ctx.CurrentMoveInput.x ==0 && Ctx.CurrentMoveInput.y == 0)
         {
-            SwitchState(Factory.Attack());
-        }
-        // Nếu người chơi ngừng di chuyển, quay về IdleState
-        else if (Ctx.CurrentMoveInput.x == 0 && Ctx.CurrentMoveInput.y == 0)
-        {
+            // Nếu không có đầu vào di chuyển, chuyển sang trạng thái Idle
             SwitchState(Factory.Idle());
+            return;
         }
     }
+    public override void ExitState() { base.ExitState(); }
 }

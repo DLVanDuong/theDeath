@@ -1,52 +1,38 @@
 ﻿using System.Collections.Generic;
-using System.Runtime;
 using UnityEngine;
 
 public class EquipmentManager : MonoBehaviour
 {
-    // Dictionary để lưu trữ các vật phẩm đã trang bị theo vị trí
     private Dictionary<EquipmentSlot, EquipmentData> equippedItems = new Dictionary<EquipmentSlot, EquipmentData>();
-    // Dictionary để lưu trữ các object đã spawn
     private Dictionary<EquipmentSlot, GameObject> spawnedObjects = new Dictionary<EquipmentSlot, GameObject>();
 
+    // --- PHẦN NÂNG CẤP 1: Thêm biến để lưu trữ hitbox hiện tại ---
+    private WeaponHitbox currentWeaponHitbox;
+
+    [Header("Character Stats")]
+    [SerializeField] private Character playerCharacterStats;
+
     [SerializeField] private Animator animator;
-    [Tooltip("Điểm neo [transform] trên xương của nhân vật")]
     [SerializeField] private Transform weaponHoldPointR;
     [SerializeField] private Transform weaponHoldPointL;
     [SerializeField] private Transform shieldholdPoint;
-    // có thểm thêm điểm neo ở đây
 
-    private RuntimeAnimatorController controller;
+    private RuntimeAnimatorController originalController;
 
     void Awake()
     {
-        if (animator == null)
-        {
-            animator = GetComponent<Animator>();
-        }
-        // Lưu lại controller gốc khi bắt đầu game
-        controller = animator.runtimeAnimatorController;
+        if (animator == null) { animator = GetComponent<Animator>(); }
+        originalController = animator.runtimeAnimatorController;
     }
+
     public void Equip(EquipmentData newItem)
     {
-        
-        // 1. Kiểm tra xem ở vị trí (slot) của vật phẩm mới có đang trang bị vật phẩm nào khác không.
-        if (equippedItems.ContainsKey(newItem.slot))
-        {
-            // 2. Nếu có, gọi hàm Unequip để gỡ vật phẩm cũ ra trước.
-            Unequip(newItem.slot);
-        }
+        if (equippedItems.ContainsKey(newItem.slot)) { Unequip(newItem.slot); }
 
-        // 3. Sau khi đã chắc chắn vị trí đó trống, tiến hành trang bị vật phẩm mới.
         equippedItems[newItem.slot] = newItem;
 
-        // 4. Áp dụng AnimatorOverrideController từ vật phẩm (nếu có)
-        if (newItem.overrideController != null)
-        {
-            animator.runtimeAnimatorController = newItem.overrideController;
-        }
+        if (newItem.overrideController != null) { animator.runtimeAnimatorController = newItem.overrideController; }
 
-        // 5. Tạo Prefab của vật phẩm và gắn vào tay nhân vật
         if (newItem.equipPrefab != null)
         {
             Transform parentTransform = GetParentTransformForSlot(newItem.slot);
@@ -56,44 +42,67 @@ public class EquipmentManager : MonoBehaviour
                 newObject.transform.localPosition = Vector3.zero;
                 newObject.transform.localRotation = Quaternion.identity;
                 spawnedObjects[newItem.slot] = newObject;
+
+                // --- PHẦN NÂNG CẤP 2: Lấy và lưu lại hitbox của vũ khí mới ---
+                currentWeaponHitbox = newObject.GetComponentInChildren<WeaponHitbox>();
+                if (currentWeaponHitbox != null && playerCharacterStats != null)
+                {
+                    currentWeaponHitbox.SetDamage(playerCharacterStats.attack);
+                }
             }
         }
         animator.SetBool("isEquipped", true);
     }
+
     public void Unequip(EquipmentSlot slot)
     {
-
-        // Kiểm tra xem có vật phẩm nào ở vị trí này để gỡ không
         if (equippedItems.ContainsKey(slot))
         {
+            // --- PHẦN SỬA LỖI QUAN TRỌNG: Phải phá hủy GameObject cũ ---
+            if (spawnedObjects.ContainsKey(slot) && spawnedObjects[slot] != null)
+            {
+                Destroy(spawnedObjects[slot]);
+                spawnedObjects.Remove(slot);
+                // --- PHẦN NÂNG CẤP 3: Khi gỡ vũ khí, xóa tham chiếu hitbox ---
+                if (slot == EquipmentSlot.RightHand) { currentWeaponHitbox = null; }
+            }
+
             EquipmentData oldItem = equippedItems[slot];
-            // Xóa vật phẩm khỏi Dictionary dữ liệu
             equippedItems.Remove(slot);
 
-            // Phá hủy GameObject của vật phẩm đã tạo ra
             if (animator.runtimeAnimatorController == oldItem.overrideController)
             {
-                animator.runtimeAnimatorController = controller;
+                animator.runtimeAnimatorController = originalController;
             }
-            // Quay trở lại Animator Controller gốc
-            animator.runtimeAnimatorController = controller;
-
-            // Báo cho Animator biết là đã gỡ trang bị
             animator.SetBool("isEquipped", equippedItems.Count > 0);
         }
     }
+
+    // --- PHẦN NÂNG CẤP 4: Tạo các hàm public để PlayerStateMachine có thể gọi ---
+    public void EnableCurrentWeaponHitbox()
+    {
+        if (currentWeaponHitbox != null)
+        {
+            currentWeaponHitbox.EnableHitbox();
+        }
+    }
+
+    public void DisableCurrentWeaponHitbox()
+    {
+        if (currentWeaponHitbox != null)
+        {
+            currentWeaponHitbox.DisableHitbox();
+        }
+    }
+
     private Transform GetParentTransformForSlot(EquipmentSlot slot)
     {
         switch (slot)
         {
-            case EquipmentSlot.RightHand:
-                return weaponHoldPointR;
-            case EquipmentSlot.lefHand:
-                return weaponHoldPointL;
-            case EquipmentSlot.Shield:
-                return shieldholdPoint;           
-            default:
-                return null;
+            case EquipmentSlot.RightHand: return weaponHoldPointR;
+            case EquipmentSlot.lefHand: return weaponHoldPointL;
+            case EquipmentSlot.Shield: return shieldholdPoint;
+            default: return null;
         }
     }
 }

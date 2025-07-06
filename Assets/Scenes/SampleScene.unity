@@ -119,6 +119,24 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &87116889 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4311111495703447436, guid: 790cbaa43a4b19c4a964617119f8d796, type: 3}
+  m_PrefabInstance: {fileID: 1512979963}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &87116895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87116889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f273cd7166c14b4dbf8a6c43244fbaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterData: {fileID: 11400000, guid: b5ebb96a45beff34e988e40a18b9ffc1, type: 2}
 --- !u!1001 &193169029
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -230,6 +248,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2803820806472684270, guid: fcc7e72ef9922724c9dbe91fe1141293, type: 3}
       insertIndex: -1
       addedObject: {fileID: 193169032}
+    - targetCorrespondingSourceObject: {fileID: 2803820806472684270, guid: fcc7e72ef9922724c9dbe91fe1141293, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 193169037}
   m_SourcePrefab: {fileID: 100100000, guid: fcc7e72ef9922724c9dbe91fe1141293, type: 3}
 --- !u!1 &193169030 stripped
 GameObject:
@@ -258,6 +279,19 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &193169037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 193169030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f273cd7166c14b4dbf8a6c43244fbaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterData: {fileID: 11400000, guid: b5ebb96a45beff34e988e40a18b9ffc1, type: 2}
 --- !u!1 &236081630
 GameObject:
   m_ObjectHideFlags: 0
@@ -409,7 +443,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.07098126, y: -0.055289682, z: 0.003940544, w: 0.99593633}
+  m_LocalRotation: {x: 0.070881456, y: -0.07644415, z: 0.005448241, w: 0.99453634}
   m_LocalPosition: {x: 14.907765, y: 18.286713, z: -12.678503}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -761,7 +795,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1286878651}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.07098125, y: -0.055289682, z: 0.0039405436, w: 0.99593633}
+  m_LocalRotation: {x: 0.070881456, y: -0.07644414, z: 0.005448239, w: 0.99453634}
   m_LocalPosition: {x: 14.907765, y: 18.286713, z: -12.678503}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1160,7 +1194,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4311111495703447436, guid: 790cbaa43a4b19c4a964617119f8d796, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 87116895}
   m_SourcePrefab: {fileID: 100100000, guid: 790cbaa43a4b19c4a964617119f8d796, type: 3}
 --- !u!1 &1596795658
 GameObject:
@@ -1323,6 +1360,10 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 2329926209397966179, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
+      propertyPath: isSprinting
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329926209397966179, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
       propertyPath: cameraTransform
       value: 
       objectReference: {fileID: 330585546}
@@ -1333,7 +1374,7 @@ PrefabInstance:
     - target: {fileID: 2329926209397966179, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
       propertyPath: 'testWeapon.Array.data[1]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 11400000, guid: 04f8b4ec7d83d36458ac9ec5144d46d1, type: 2}
     - target: {fileID: 7488485820153291786, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.08993387

@@ -1,8 +1,8 @@
 ﻿// PlayerIdleState.cs
-public class PlayerIdleState : PlayerBaseState
+public class PlayerIdleState : PlayerGroundedState
 {
-    public PlayerIdleState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
-        : base(currentContext, playerStateFactory) { }
+    public PlayerIdleState(PlayerStateMachine stateMachine, PlayerStateFactory playerStateFactory)
+        : base(stateMachine, playerStateFactory) { }
 
     public override void EnterState()
     {
@@ -13,23 +13,12 @@ public class PlayerIdleState : PlayerBaseState
 
     public override void UpdateState()
     {
-        // Mỗi frame, kiểm tra xem có nên chuyển state không
-        CheckSwitchStates();
-    }
-
-    public override void ExitState() { }
-
-    public override void CheckSwitchStates()
-    {
-        // Nếu người chơi nhấn nút tấn công, chuyển sang AttackState
-        if (Ctx.IsAttackPressed)
+        base.UpdateState(); // Cập nhật trạng thái hiện tại
+        if(Ctx.CurrentMoveInput.x != 0 || Ctx.CurrentMoveInput.y != 0)
         {
-            SwitchState(Factory.Attack());
-        }
-        // Nếu người chơi nhấn nút di chuyển, chuyển sang MoveState
-        else if (Ctx.CurrentMoveInput.x != 0 || Ctx.CurrentMoveInput.y != 0)
-        {
+            // Nếu có đầu vào di chuyển, chuyển sang trạng thái Move
             SwitchState(Factory.Move());
-        }
+        }       
     }
+    public override void ExitState() { base.ExitState(); } 
 }
