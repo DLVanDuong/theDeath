@@ -24,7 +24,7 @@ public class PlayerStateFactory
     // Bạn có thể thêm các state khác ở đây (ví dụ: Jump, Crouch...)
     public PlayerBaseState Jump()
     {
-        return new PlayerAirborneState(_context, this);
+        return new PlayerJumpState(_context, this);
     }
     public PlayerBaseState Dodge()
     {

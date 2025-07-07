@@ -29,6 +29,9 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private float rotationSpeed = 10f;
 
+    // === Animator Hashes ===
+    private readonly int isGroundedHash = Animator.StringToHash("isGrounded"); // Thêm dòng này
+
     // ==Gravity===
     [Header("Gravity")]
     [SerializeField] private float gravity = -9.81f;
@@ -36,11 +39,11 @@ public class PlayerStateMachine : MonoBehaviour
     public float playerVelocityY;
 
     // === Animator Hashes ===
-    private readonly int _horizontalHash = Animator.StringToHash("Horizontal");
-    private readonly int _verticalHash = Animator.StringToHash("Vertical");
-    private readonly int _isSprintingHash = Animator.StringToHash("isSprinting");
-    private readonly int _isEquippedHash = Animator.StringToHash("isEquipped");
-    private readonly int _attackHash = Animator.StringToHash("Attack");
+    private readonly int horizontalHash = Animator.StringToHash("Horizontal");
+    private readonly int verticalHash = Animator.StringToHash("Vertical");
+    private readonly int isSprintingHash = Animator.StringToHash("isSprinting");
+    private readonly int isEquippedHash = Animator.StringToHash("isEquipped");
+    private readonly int attackHash = Animator.StringToHash("Attack");
 
     // === Getters & Setters cho các State ===
     public PlayerBaseState CurrentState { get => currentState; set => currentState = value; }
@@ -48,11 +51,11 @@ public class PlayerStateMachine : MonoBehaviour
     public Animator Animator { get => animator; }
     public Vector2 CurrentMoveInput { get => currentMoveInput; }
     public bool IsAttackPressed { get => isAttackPressed; set => isAttackPressed = value; }
-    public int HorizontalHash { get => _horizontalHash; }
-    public int VerticalHash { get => _verticalHash; }
-    public int IsSprintingHash { get => _isSprintingHash; }
-    public int IsEquippedHash { get => _isEquippedHash; }
-    public int AttackHash { get => _attackHash; }
+    public int HorizontalHash { get => horizontalHash; }
+    public int VerticalHash { get => verticalHash; }
+    public int IsSprintingHash { get => isSprintingHash; }
+    public int IsEquippedHash { get => isEquippedHash; }
+    public int AttackHash { get => attackHash; }
     public bool IsJumpPressed { get => isJumpPressed; set => isJumpPressed = value; }
     public bool IsDodgePressed { get => isDodgePressed; set => isDodgePressed = value; }
     public float PlayerVelocityY { get => playerVelocityY; set => playerVelocityY = value; }
@@ -98,7 +101,7 @@ public class PlayerStateMachine : MonoBehaviour
         }
         else
         {
-            animator.SetBool(_isEquippedHash, false);
+            animator.SetBool(isEquippedHash, false);
         }
     }
 
@@ -108,6 +111,9 @@ public class PlayerStateMachine : MonoBehaviour
     void Update()
     {
         HandleGravity();
+
+        animator.SetBool(isGroundedHash, characterController.isGrounded);
+
         currentState.UpdateState();
     }
     // Hàm này áp dụng lực lên nhân vật
@@ -137,9 +143,9 @@ public class PlayerStateMachine : MonoBehaviour
 
     public void HandleAnimation()
     {
-        animator.SetFloat(_horizontalHash, currentMoveInput.x);
-        animator.SetFloat(_verticalHash, currentMoveInput.y);
-        animator.SetBool(_isSprintingHash, isSprinting);
+        animator.SetFloat(horizontalHash, currentMoveInput.x);
+        animator.SetFloat(verticalHash, currentMoveInput.y);
+        animator.SetBool(isSprintingHash, isSprinting);
     }
 
     private void OnAnimatorMove()
